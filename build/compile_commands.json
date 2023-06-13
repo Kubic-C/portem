@@ -1,0 +1,14 @@
+[
+{
+  "directory": "C:/Users/sawye/Dev/portem/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -g -o src\\CMakeFiles\\portem.dir\\allocator.cpp.obj -c C:\\Users\\sawye\\Dev\\portem\\src\\allocator.cpp",
+  "file": "C:\\Users\\sawye\\Dev\\portem\\src\\allocator.cpp",
+  "output": "src\\CMakeFiles\\portem.dir\\allocator.cpp.obj"
+},
+{
+  "directory": "C:/Users/sawye/Dev/portem/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -g -o src\\CMakeFiles\\portem.dir\\memory_pool.cpp.obj -c C:\\Users\\sawye\\Dev\\portem\\src\\memory_pool.cpp",
+  "file": "C:\\Users\\sawye\\Dev\\portem\\src\\memory_pool.cpp",
+  "output": "src\\CMakeFiles\\portem.dir\\memory_pool.cpp.obj"
+}
+]

@@ -1,0 +1,4 @@
+# ninja log v5
+2	62	7083213630597625	src/CMakeFiles/portem.dir/allocator.cpp.obj	56adff993fad589a
+10	394	7083213711657012	src/CMakeFiles/portem.dir/memory_pool.cpp.obj	d1006bcddaec0251
+395	490	7083213712618583	src/libportem.a	cb5ddf71c5f834fc
