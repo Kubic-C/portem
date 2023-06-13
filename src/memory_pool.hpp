@@ -103,8 +103,8 @@ namespace ptm {
         void deallocate(T* block) {
             block_header_t<T>* header = (block_header_t<T>*)((uint8_t*)block - block_header_size);
 
-            spk_assert(block != nullptr);
-            spk_assert(!header->flags[BLOCK_FLAGS_FREE]);
+            assert(block != nullptr);
+            assert(!header->flags[BLOCK_FLAGS_FREE]);
 
             header->flags[BLOCK_FLAGS_FREE].flip();
 
@@ -209,7 +209,7 @@ namespace ptm {
          * @return the front block
          */
         block_header_t<T>* block_try_bisect(block_header_t<T>* header, size_t size) {
-            spk_assert(header->total_bytes > size && header->flags[BLOCK_FLAGS_FREE]);
+            assert(header->total_bytes > size && header->flags[BLOCK_FLAGS_FREE]);
 
             int32_t            left_over_block_total_bytes = 0;
             block_header_t<T>* next       = nullptr;
@@ -227,7 +227,7 @@ namespace ptm {
         }
 
         void set_block_as_allocated(block_header_t<T>* header) {
-            spk_assert(header->flags[BLOCK_FLAGS_FREE]);
+            assert(header->flags[BLOCK_FLAGS_FREE]);
 
             // claim the block as allocated
             header->flags[BLOCK_FLAGS_FREE].flip();
@@ -285,7 +285,7 @@ namespace ptm {
     protected:
         // linked list operations
         void free_list_assign_first(block_header_t<T>* iter) {
-            spk_assert(first == nullptr && last == nullptr);
+            assert(first == nullptr && last == nullptr);
 
             first = iter;
             last  = iter;
@@ -421,7 +421,7 @@ namespace ptm {
                 }
             }
 
-            spk_assert(!ptr, "cannot deallocate invalid memory");
+            assert(!ptr);
         }
 
         size_t get_initial_size() const {
