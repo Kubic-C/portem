@@ -9,5 +9,7 @@
 namespace ptm {
     typedef std::function<void(const char*)> log_func_t;
 
-    inline log_func_t log;
+    inline log_func_t log = [](const char* msg) {
+        printf("%s\n", msg);
+    };
 }
