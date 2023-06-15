@@ -69,43 +69,6 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # C:/Users/sawye/Dev/portem/CMakeLists.txt
 # =============================================================================
 
-# =============================================================================
-# Object build statements for STATIC_LIBRARY target portem
-
-
-#############################################
-# Order-only phony target for portem
-
-build cmake_object_order_depends_target_portem: phony || src/CMakeFiles/portem.dir
-
-build src/CMakeFiles/portem.dir/allocator.cpp.obj: CXX_COMPILER__portem_unscanned_Debug C$:/Users/sawye/Dev/portem/src/allocator.cpp || cmake_object_order_depends_target_portem
-  DEP_FILE = src\CMakeFiles\portem.dir\allocator.cpp.obj.d
-  FLAGS = -g
-  OBJECT_DIR = src\CMakeFiles\portem.dir
-  OBJECT_FILE_DIR = src\CMakeFiles\portem.dir
-
-build src/CMakeFiles/portem.dir/memory_pool.cpp.obj: CXX_COMPILER__portem_unscanned_Debug C$:/Users/sawye/Dev/portem/src/memory_pool.cpp || cmake_object_order_depends_target_portem
-  DEP_FILE = src\CMakeFiles\portem.dir\memory_pool.cpp.obj.d
-  FLAGS = -g
-  OBJECT_DIR = src\CMakeFiles\portem.dir
-  OBJECT_FILE_DIR = src\CMakeFiles\portem.dir
-
-
-# =============================================================================
-# Link build statements for STATIC_LIBRARY target portem
-
-
-#############################################
-# Link the static library src\libportem.a
-
-build src/libportem.a: CXX_STATIC_LIBRARY_LINKER__portem_Debug src/CMakeFiles/portem.dir/allocator.cpp.obj src/CMakeFiles/portem.dir/memory_pool.cpp.obj
-  LANGUAGE_COMPILE_FLAGS = -g
-  OBJECT_DIR = src\CMakeFiles\portem.dir
-  POST_BUILD = cd .
-  PRE_LINK = cd .
-  TARGET_FILE = src\libportem.a
-  TARGET_PDB = portem.a.dbg
-
 
 #############################################
 # Utility command for edit_cache
@@ -131,11 +94,77 @@ build src/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
 build src/rebuild_cache: phony src/CMakeFiles/rebuild_cache.util
 
 # =============================================================================
+# Write statements declared in CMakeLists.txt:
+# C:/Users/sawye/Dev/portem/src/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target portem
+
+
+#############################################
+# Order-only phony target for portem
+
+build cmake_object_order_depends_target_portem: phony || src/ptm/CMakeFiles/portem.dir
+
+build src/ptm/CMakeFiles/portem.dir/allocator.cpp.obj: CXX_COMPILER__portem_unscanned_Debug C$:/Users/sawye/Dev/portem/src/ptm/allocator.cpp || cmake_object_order_depends_target_portem
+  DEP_FILE = src\ptm\CMakeFiles\portem.dir\allocator.cpp.obj.d
+  FLAGS = -g
+  OBJECT_DIR = src\ptm\CMakeFiles\portem.dir
+  OBJECT_FILE_DIR = src\ptm\CMakeFiles\portem.dir
+
+build src/ptm/CMakeFiles/portem.dir/memory_pool.cpp.obj: CXX_COMPILER__portem_unscanned_Debug C$:/Users/sawye/Dev/portem/src/ptm/memory_pool.cpp || cmake_object_order_depends_target_portem
+  DEP_FILE = src\ptm\CMakeFiles\portem.dir\memory_pool.cpp.obj.d
+  FLAGS = -g
+  OBJECT_DIR = src\ptm\CMakeFiles\portem.dir
+  OBJECT_FILE_DIR = src\ptm\CMakeFiles\portem.dir
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target portem
+
+
+#############################################
+# Link the static library src\ptm\libportem.a
+
+build src/ptm/libportem.a: CXX_STATIC_LIBRARY_LINKER__portem_Debug src/ptm/CMakeFiles/portem.dir/allocator.cpp.obj src/ptm/CMakeFiles/portem.dir/memory_pool.cpp.obj
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = src\ptm\CMakeFiles\portem.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = src\ptm\libportem.a
+  TARGET_PDB = portem.a.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build src/ptm/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cmd.exe /C "cd /D C:\Users\sawye\Dev\portem\build\src\ptm && C:\msys64\mingw64\bin\ccmake.exe -SC:\Users\sawye\Dev\portem -BC:\Users\sawye\Dev\portem\build"
+  DESC = Running CMake cache editor...
+  pool = console
+  restat = 1
+
+build src/ptm/edit_cache: phony src/ptm/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build src/ptm/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cmd.exe /C "cd /D C:\Users\sawye\Dev\portem\build\src\ptm && C:\msys64\mingw64\bin\cmake.exe --regenerate-during-build -SC:\Users\sawye\Dev\portem -BC:\Users\sawye\Dev\portem\build"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build src/ptm/rebuild_cache: phony src/ptm/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
 # Target aliases.
 
-build libportem.a: phony src/libportem.a
+build libportem.a: phony src/ptm/libportem.a
 
-build portem: phony src/libportem.a
+build portem: phony src/ptm/libportem.a
 
 # =============================================================================
 # Folder targets.
@@ -152,7 +181,14 @@ build all: phony src/all
 #############################################
 # Folder: C:/Users/sawye/Dev/portem/build/src
 
-build src/all: phony src/libportem.a
+build src/all: phony src/ptm/all
+
+# =============================================================================
+
+#############################################
+# Folder: C:/Users/sawye/Dev/portem/build/src/ptm
+
+build src/ptm/all: phony src/ptm/libportem.a
 
 # =============================================================================
 # Built-in targets
@@ -161,14 +197,14 @@ build src/all: phony src/libportem.a
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | C$:/Users/sawye/Dev/portem/CMakeLists.txt C$:/Users/sawye/Dev/portem/src/CMakeLists.txt C$:/msys64/mingw64/share/cmake/Modules/CMakeCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCXXInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCommonLanguageInclude.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeGenericSystem.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeInitializeConfigs.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeLanguageInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeRCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-windres.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.26.0/CMakeCCompiler.cmake CMakeFiles/3.26.0/CMakeCXXCompiler.cmake CMakeFiles/3.26.0/CMakeRCCompiler.cmake CMakeFiles/3.26.0/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | C$:/Users/sawye/Dev/portem/CMakeLists.txt C$:/Users/sawye/Dev/portem/src/CMakeLists.txt C$:/Users/sawye/Dev/portem/src/ptm/CMakeLists.txt C$:/msys64/mingw64/share/cmake/Modules/CMakeCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCXXInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCommonLanguageInclude.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeGenericSystem.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeInitializeConfigs.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeLanguageInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeRCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-windres.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.26.0/CMakeCCompiler.cmake CMakeFiles/3.26.0/CMakeCXXCompiler.cmake CMakeFiles/3.26.0/CMakeRCCompiler.cmake CMakeFiles/3.26.0/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:/Users/sawye/Dev/portem/CMakeLists.txt C$:/Users/sawye/Dev/portem/src/CMakeLists.txt C$:/msys64/mingw64/share/cmake/Modules/CMakeCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCXXInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCommonLanguageInclude.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeGenericSystem.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeInitializeConfigs.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeLanguageInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeRCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-windres.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.26.0/CMakeCCompiler.cmake CMakeFiles/3.26.0/CMakeCXXCompiler.cmake CMakeFiles/3.26.0/CMakeRCCompiler.cmake CMakeFiles/3.26.0/CMakeSystem.cmake: phony
+build C$:/Users/sawye/Dev/portem/CMakeLists.txt C$:/Users/sawye/Dev/portem/src/CMakeLists.txt C$:/Users/sawye/Dev/portem/src/ptm/CMakeLists.txt C$:/msys64/mingw64/share/cmake/Modules/CMakeCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCXXInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCommonLanguageInclude.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeGenericSystem.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeInitializeConfigs.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeLanguageInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeRCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-windres.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.26.0/CMakeCCompiler.cmake CMakeFiles/3.26.0/CMakeCXXCompiler.cmake CMakeFiles/3.26.0/CMakeRCCompiler.cmake CMakeFiles/3.26.0/CMakeSystem.cmake: phony
 
 
 #############################################

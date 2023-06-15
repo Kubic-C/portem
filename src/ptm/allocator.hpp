@@ -51,4 +51,22 @@ namespace ptm {
             return true;
         }
     };
+
+    template<typename T>
+    class indirect_allocator_t : public allocator_t<T> {
+    public:
+        indirect_allocator_t(allocator_t<T>* allocator)
+            : alloc(allocator) {}
+
+        virtual T* allocate(size_t n, const void* hint = 0) override {
+            return alloc->allocate(n, hint);
+        }   
+
+        virtual void deallocate(T* ptr, size_t n) override{
+            alloc->deallocate(ptr, n);
+        }
+
+    private:
+        allocator_t<T>* alloc;
+    };  
 }

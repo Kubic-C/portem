@@ -147,6 +147,9 @@
 		},
 		{
 			"path" : "src/CMakeLists.txt"
+		},
+		{
+			"path" : "src/ptm/CMakeLists.txt"
 		}
 	],
 	"kind" : "cmakeFiles",
