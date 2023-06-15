@@ -5,3 +5,6 @@ C:/Users/sawye/Dev/portem/build/src/CMakeFiles/rebuild_cache.dir
 C:/Users/sawye/Dev/portem/build/src/ptm/CMakeFiles/portem.dir
 C:/Users/sawye/Dev/portem/build/src/ptm/CMakeFiles/edit_cache.dir
 C:/Users/sawye/Dev/portem/build/src/ptm/CMakeFiles/rebuild_cache.dir
+C:/Users/sawye/Dev/portem/build/test/CMakeFiles/test_field.dir
+C:/Users/sawye/Dev/portem/build/test/CMakeFiles/edit_cache.dir
+C:/Users/sawye/Dev/portem/build/test/CMakeFiles/rebuild_cache.dir

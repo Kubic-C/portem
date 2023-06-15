@@ -1,7 +1,7 @@
 #pragma once
 
 namespace ptm {
-        template<typename T>
+    template<typename T>
     class allocator_t {
     public:
       typedef T              _Tp;
@@ -55,14 +55,25 @@ namespace ptm {
     template<typename T>
     class indirect_allocator_t : public allocator_t<T> {
     public:
+        typedef indirect_allocator_t<T> allocator_type;
+
+        template <class U> 
+        struct rebind { typedef indirect_allocator_t<U> other; };
+
+    public:
+        indirect_allocator_t(const indirect_allocator_t<T>& other) {
+            alloc = other.alloc;
+        }
+
         indirect_allocator_t(allocator_t<T>* allocator)
             : alloc(allocator) {}
 
-        virtual T* allocate(size_t n, const void* hint = 0) override {
+
+        T* allocate(size_t n, const void* hint = 0) {
             return alloc->allocate(n, hint);
         }   
 
-        virtual void deallocate(T* ptr, size_t n) override{
+        void deallocate(T* ptr, size_t n) {
             alloc->deallocate(ptr, n);
         }
 
