@@ -209,7 +209,8 @@ namespace ptm {
          * @return the front block
          */
         block_header_t<T>* block_try_bisect(block_header_t<T>* header, size_t size) {
-            assert(header->total_bytes > size && header->flags[BLOCK_FLAGS_FREE]);
+            assert(header->flags[BLOCK_FLAGS_FREE]);
+            assert(header->total_bytes >= size);
 
             int32_t            left_over_block_total_bytes = 0;
             block_header_t<T>* next       = nullptr;
@@ -439,7 +440,7 @@ namespace ptm {
 
     /* destroys and creates objects upon creating and destroying */
     template<typename T>
-    class object_pool_t : private memory_pool_t<T> {
+    class object_pool_t : public memory_pool_t<T> {
     public:
         object_pool_t() {
             this->initial_size = this->_initial_size;
