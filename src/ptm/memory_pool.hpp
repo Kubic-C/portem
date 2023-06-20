@@ -5,6 +5,8 @@
 #include "doubly_linked_list.hpp"
 
 namespace ptm {
+    constexpr size_t header_magic_number = 0xFAF1F2F3;
+
     template<typename T>
     T* inc_by_byte(T* ptr, size_t byte) {
         return reinterpret_cast<T*>(reinterpret_cast<uint8_t*>(ptr) + byte);
@@ -17,7 +19,16 @@ namespace ptm {
     };
 
     template<typename T>
-    struct block_header_t : doubly_linked_list_element_t {
+    struct block_header_t : public doubly_linked_list_element_t {
+        block_header_t(size_t total_bytes, std::bitset<8> flags)
+            : total_bytes(total_bytes), flags(flags) {
+#ifndef NDEBUG
+            magic_number = header_magic_number;
+#endif
+        }
+
+        ~block_header_t() override {}
+
         std::bitset<8> flags;
 
         // the amount of bytes, including the header and its blocks it occupies
@@ -30,6 +41,10 @@ namespace ptm {
         T* elements() {
             return inc_by_byte((T*)this, sizeof(*this));
         }
+
+#ifndef NDEBUG
+        size_t magic_number;
+#endif
     };
 
     template<typename T>
@@ -87,6 +102,8 @@ namespace ptm {
             if(header == nullptr) {
                 return nullptr;
             }
+
+            assert(header->magic_number == header_magic_number);
  
             block_try_bisect(header, byte_size);
             set_block_as_allocated(header);
@@ -137,13 +154,13 @@ namespace ptm {
         }
 
         block_header_t<T>* find_header_with_at_least(size_t size) {
-            block_header_t<T>* cur =  (block_header_t<T>*)free_blocks.first;
+            block_header_t<T>* cur = dynamic_cast<block_header_t<T>*>(free_blocks.first);
             while(cur != nullptr) {
                 if(cur->total_bytes >= size) {
                     return cur;
                 }
 
-                cur->next;
+                cur = dynamic_cast<block_header_t<T>*>(cur->next);
             }
 
             return nullptr;
@@ -246,11 +263,9 @@ namespace ptm {
             }
 
             block_header_t<T>* header = (block_header_t<T>*)addr;
-            header->total_bytes = size;
-
-            header->flags       = 0; 
-            header->next        = nullptr;
-            header->prev        = nullptr;
+            // since header will be used as a polymorphic object
+            // we must initialize it
+            new(header)block_header_t<T>(size, 0);
 
             header->flags[BLOCK_FLAGS_FREE].flip();
 
@@ -277,7 +292,7 @@ namespace ptm {
         uint8_t* real_ptr     = nullptr;
         uint8_t* aligned_ptr  = nullptr;
 
-        doubly_linked_list_header_t free_blocks;
+        doubly_linked_list_header_t<block_header_t<T>> free_blocks;
     };
 
     template<typename T>
@@ -377,7 +392,7 @@ namespace ptm {
             T* elements = this->allocate(size);
         
             for(size_t i = 0; i < size; i++) {
-                this->construct(elements + i, args...);
+                this->construct(&elements[i], args...);
             }
 
             return elements;

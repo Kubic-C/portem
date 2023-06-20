@@ -27,8 +27,10 @@ struct object_t {
 
 int main() {
     for(uint32_t i = 0; i < 10; i++) {
-        const double test_size = 100000;
+
+        const uint32_t test_size = 100000;
         ptm::object_pool_t<object_t> int_pool(5 * i + 1);
+        std::bitset<test_size> object_deleted = {};
 
         std::vector<object_t> const_values;
         const_values.reserve(test_size);
@@ -39,9 +41,17 @@ int main() {
         std::vector<object_t*> test_values;
         for(uint32_t i = 0; i < test_size; i++) {
             test_values.push_back(int_pool.create(10, const_values[i]));
+
+            if(rand() % 1) {
+                int_pool.destruct(test_values.back(), 10);
+                object_deleted[i] = 1;
+            }
         }
 
         for(uint32_t i = 0; i < test_size; i++) {
+            if(object_deleted[i])
+                continue;
+
             for(uint32_t j = 0; j < 10; j++) {
                 if(test_values[i][j] != const_values[i]) {
                     printf("a value was found that was not valid\n");
