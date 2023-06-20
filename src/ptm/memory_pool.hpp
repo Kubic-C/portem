@@ -38,7 +38,7 @@ namespace ptm {
     template<typename T>
     class block_allocator_t {
         static constexpr size_t block_header_size = sizeof(block_header_t<T>);
-        static constexpr size_t alignment   = 16; 
+        static constexpr size_t alignment   = system_alignment; 
 
     public:
         block_allocator_t() {}
@@ -87,7 +87,7 @@ namespace ptm {
 
         // size is the amount of elements you want allocated
         T* allocate(size_t size) {
-            size_t             byte_size = aligned_space_needed(size * sizeof(T));
+            size_t             byte_size = block_header_size + size * sizeof(T);
             block_header_t<T>* header    = get_block_with(byte_size);
 
             if(header == nullptr) {
