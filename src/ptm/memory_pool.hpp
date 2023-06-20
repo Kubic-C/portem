@@ -2,6 +2,7 @@
 
 #include "base.hpp"
 #include "allocator.hpp"
+#include "doubly_linked_list.hpp"
 
 namespace ptm {
     template<typename T>
@@ -16,12 +17,8 @@ namespace ptm {
     };
 
     template<typename T>
-    struct block_header_t {
+    struct block_header_t : doubly_linked_list_element_t {
         std::bitset<8> flags;
-
-        // will be null if the block is allocated
-        block_header_t<T>* prev;
-        block_header_t<T>* next;
 
         // the amount of bytes, including the header and its blocks it occupies
         size_t total_bytes; 
@@ -47,8 +44,6 @@ namespace ptm {
         void init(size_t capacity = 10) {
             size_t alignment_offset = 0;
 
-            this->first = nullptr;
-            this->last  = nullptr;
             this->capacity_ = (capacity * sizeof(T) + (block_header_size * capacity) / 10);
 
             this->real_ptr = (uint8_t*)malloc(this->capacity_ + alignment);
@@ -68,9 +63,8 @@ namespace ptm {
         block_allocator_t(const block_allocator_t& other) {
             this->aligned_ptr  = other.aligned_ptr;
             this->real_ptr     = other.real_ptr;
-            this->capacity_     = other.capacity_;
-            this->first        = other.first;
-            this->last         = other.last;
+            this->capacity_    = other.capacity_;
+            this->free_blocks  = other.free_blocks;
             this->total_blocks = other.total_blocks;
             this->freed_blocks = other.freed_blocks;
         }
@@ -87,7 +81,7 @@ namespace ptm {
 
         // size is the amount of elements you want allocated
         T* allocate(size_t size) {
-            size_t             byte_size = block_header_size + size * sizeof(T);
+            size_t             byte_size = aligned_space_needed(size * sizeof(T));
             block_header_t<T>* header    = get_block_with(byte_size);
 
             if(header == nullptr) {
@@ -110,7 +104,7 @@ namespace ptm {
 
             freed_blocks++;
 
-            free_list_push_back(header);
+            free_blocks.push_back(header);
         }
 
         size_t capacity() const {
@@ -143,10 +137,13 @@ namespace ptm {
         }
 
         block_header_t<T>* find_header_with_at_least(size_t size) {
-            for(block_header_t<T>* cur = first; cur != nullptr; cur = cur->prev) {
+            block_header_t<T>* cur =  (block_header_t<T>*)free_blocks.first;
+            while(cur != nullptr) {
                 if(cur->total_bytes >= size) {
                     return cur;
                 }
+
+                cur->next;
             }
 
             return nullptr;
@@ -193,7 +190,7 @@ namespace ptm {
 
             // remove all headers from list
             for(auto cur = block_begin; cur != block_end; cur = inc_by_byte(cur, cur->total_bytes)) {
-                free_list_remove(cur);
+                free_blocks.remove_element(cur);
                 total_blocks--;
                 freed_blocks--;
             }
@@ -233,13 +230,14 @@ namespace ptm {
             // claim the block as allocated
             header->flags[BLOCK_FLAGS_FREE].flip();
 
-            free_list_remove(header);
+            free_blocks.remove_element(header);
 
             freed_blocks--;
         }
 
         // size is in bytes
         block_header_t<T>* create_block_header(uint8_t* addr, size_t size) {
+            const size_t test_align = ((size_t)addr % alignment);
             assert(((size_t)addr % alignment) == 0);
             assert((int32_t)size - block_header_size >= 0);
 
@@ -256,7 +254,7 @@ namespace ptm {
 
             header->flags[BLOCK_FLAGS_FREE].flip();
 
-            free_list_push_back(header);
+            free_blocks.push_back(header);
 
             total_blocks++;
             freed_blocks++;
@@ -279,83 +277,7 @@ namespace ptm {
         uint8_t* real_ptr     = nullptr;
         uint8_t* aligned_ptr  = nullptr;
 
-        // linked list of free blocks
-        block_header_t<T>* first = nullptr;
-        block_header_t<T>* last  = nullptr;
-
-    protected:
-        // linked list operations
-        void free_list_assign_first(block_header_t<T>* iter) {
-            assert(first == nullptr && last == nullptr);
-
-            first = iter;
-            last  = iter;
-        }
-
-        void free_list_remove(block_header_t<T>* iter) {
-            if(iter == first) {
-                first = iter->prev;
-            } 
-
-            if(iter == last) {
-                last = iter->next;
-            }
-
-            if(iter->next != nullptr) {
-                iter->next->prev = iter->prev;
-            }
-
-            if(iter->prev != nullptr) {
-                iter->prev->next = iter->next;
-            }
-
-            iter->prev = nullptr;
-            iter->next = nullptr;
-        }
-
-        void free_list_push_back(block_header_t<T>* iter) {
-            if(first == nullptr)
-                free_list_assign_first(iter);
-            else {
-                last->prev = iter;
-                iter->next = last;
-                last = iter;
-            }
-        }
-
-        void free_list_push_front(block_header_t<T>* iter) {
-            if(first == nullptr)
-                free_list_assign_first(iter);
-            else {
-                first->next = iter;
-                iter->prev = first;
-                first = iter;
-            }
-        }
-
-        void free_list_pop_front() {
-            if(first != nullptr) {
-                block_header_t<T>* iter_prev = first->prev;
-
-                first = iter_prev;
-
-                if(iter_prev != nullptr) {
-                    iter_prev->next = nullptr;
-                }
-            }
-        }
-
-        void free_list_pop_back() {
-            if(last != nullptr) {
-                block_header_t<T>* iter_next = last->next;
-
-                last = iter_next;
-
-                if(iter_next != nullptr) {
-                    iter_next->prev = nullptr;
-                }
-            }
-        }
+        doubly_linked_list_header_t free_blocks;
     };
 
     template<typename T>
