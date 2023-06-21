@@ -4,7 +4,10 @@
 #include <malloc.h>
 #include <bitset>
 #include <functional>
+#include <variant>
 #include <assert.h>
+#include <memory>
+#include <cstring>
 
 namespace ptm {
     constexpr auto system_alignment = sizeof(void*);

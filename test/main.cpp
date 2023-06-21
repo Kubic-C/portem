@@ -8,9 +8,9 @@ struct object_t {
     float static_friction = rand();
     float dynamic_friction = rand();
 
-    object_t* body =(object_t*)rand();
-    object_t* prev =(object_t*)rand();
-    object_t* next =(object_t*)rand();
+    object_t* body =(object_t*)(size_t)rand();
+    object_t* prev =(object_t*)(size_t)rand();
+    object_t* next =(object_t*)(size_t)rand();
 
     bool operator!=(const object_t& other) {
         return tensor != other.tensor &&    
@@ -26,6 +26,24 @@ struct object_t {
 };
 
 int main() {
+    ptm::small_list_t<int> list;
+
+    list.push_back(1);
+    list.push_back(2);
+    list.push_back(3);
+    list.push_back(4);
+    list.push_back(5);
+
+    for(uint32_t i = 0; i < 5; i++) {
+        printf("%i\n", list[i]);
+    }
+
+    list.pop_back();
+    list.pop_back();
+    list.pop_back();
+    list.pop_back();
+    list.pop_back();
+
     for(uint32_t i = 0; i < 10; i++) {
         const double test_size = 100000;
         ptm::object_pool_t<object_t> int_pool(5 * i + 1);
