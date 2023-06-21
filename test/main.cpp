@@ -27,7 +27,7 @@ struct object_t {
 
 int main() {
     for(uint32_t i = 0; i < 10; i++) {
-
+        printf("starting test: %u\n", i);
         const uint32_t test_size = 100000;
         ptm::object_pool_t<object_t> int_pool(5 * i + 1);
         std::bitset<test_size> object_deleted = {};
@@ -43,7 +43,7 @@ int main() {
             test_values.push_back(int_pool.create(10, const_values[i]));
 
             if(rand() % 1) {
-                int_pool.destruct(test_values.back(), 10);
+                int_pool.destroy(test_values.back(), 10);
                 object_deleted[i] = 1;
             }
         }
@@ -57,7 +57,7 @@ int main() {
                     printf("a value was found that was not valid\n");
 
                     for(auto ptr : test_values)
-                        int_pool.destruct(ptr, 1);
+                        int_pool.destroy(ptr, 1);
 
                     exit(EXIT_FAILURE);
                 }
@@ -65,7 +65,7 @@ int main() {
         }
 
         for(auto ptr : test_values)
-                int_pool.destruct(ptr, 1);
+                int_pool.destroy(ptr, 1);
 
         printf("no failure: %u\n", i);
     }

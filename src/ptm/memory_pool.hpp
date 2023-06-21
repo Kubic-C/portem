@@ -5,8 +5,6 @@
 #include "doubly_linked_list.hpp"
 
 namespace ptm {
-    constexpr size_t header_magic_number = 0xFAF1F2F3;
-
     template<typename T>
     T* inc_by_byte(T* ptr, size_t byte) {
         return reinterpret_cast<T*>(reinterpret_cast<uint8_t*>(ptr) + byte);
@@ -21,11 +19,7 @@ namespace ptm {
     template<typename T>
     struct block_header_t : public doubly_linked_list_element_t {
         block_header_t(size_t total_bytes, std::bitset<8> flags)
-            : total_bytes(total_bytes), flags(flags) {
-#ifndef NDEBUG
-            magic_number = header_magic_number;
-#endif
-        }
+            : total_bytes(total_bytes), flags(flags) {}
 
         ~block_header_t() override {}
 
@@ -41,10 +35,6 @@ namespace ptm {
         T* elements() {
             return inc_by_byte((T*)this, sizeof(*this));
         }
-
-#ifndef NDEBUG
-        size_t magic_number;
-#endif
     };
 
     template<typename T>
@@ -103,7 +93,6 @@ namespace ptm {
                 return nullptr;
             }
 
-            assert(header->magic_number == header_magic_number);
  
             block_try_bisect(header, byte_size);
             set_block_as_allocated(header);
@@ -377,34 +366,34 @@ namespace ptm {
 
     /* destroys and creates objects upon creating and destroying */
     template<typename T>
-    class object_pool_t : public memory_pool_t<T> {
+    class object_pool_t {
     public:
-        object_pool_t() {
-            this->initial_size = this->_initial_size;
-        }
+        object_pool_t() {}
 
-        object_pool_t(size_t initial_size) {
-            this->initial_size = initial_size;
-        }
+        object_pool_t(size_t initial_size)
+            : mem_pool(initial_size) {}
 
         template<typename ... params>
         T* create(size_t size, params&& ... args) {
-            T* elements = this->allocate(size);
+            T* elements = mem_pool.allocate(size);
         
-            for(size_t i = 0; i < size; i++) {
-                this->construct(&elements[i], args...);
+            for(size_t i = 0; i < size && elements; i++) {
+                mem_pool.construct(&elements[i], args...);
             }
 
             return elements;
         }
 
-        void destruct(T* ptr, size_t size) {
+        void destroy(T* ptr, size_t size) {
             for(size_t i = 0; i < size; i++) {
-                this->destroy(ptr + i);
+                mem_pool.destroy(ptr + i);
             }
 
-            this->deallocate(ptr, size);
+            mem_pool.deallocate(ptr, size);
         }
+    
+    private:
+        memory_pool_t<T> mem_pool;
     };
 
     template<typename T>
