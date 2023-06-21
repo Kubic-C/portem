@@ -17,7 +17,12 @@ namespace ptm {
     };
 
     template<typename T>
-    struct block_header_t : doubly_linked_list_element_t {
+    struct block_header_t : public doubly_linked_list_element_t {
+        block_header_t(size_t total_bytes, std::bitset<8> flags)
+            : total_bytes(total_bytes), flags(flags) {}
+
+        ~block_header_t() override {}
+
         std::bitset<8> flags;
 
         // the amount of bytes, including the header and its blocks it occupies
@@ -87,6 +92,7 @@ namespace ptm {
             if(header == nullptr) {
                 return nullptr;
             }
+
  
             block_try_bisect(header, byte_size);
             set_block_as_allocated(header);
@@ -137,13 +143,13 @@ namespace ptm {
         }
 
         block_header_t<T>* find_header_with_at_least(size_t size) {
-            block_header_t<T>* cur =  (block_header_t<T>*)free_blocks.first;
+            block_header_t<T>* cur = dynamic_cast<block_header_t<T>*>(free_blocks.first);
             while(cur != nullptr) {
                 if(cur->total_bytes >= size) {
                     return cur;
                 }
 
-                cur->next;
+                cur = dynamic_cast<block_header_t<T>*>(cur->next);
             }
 
             return nullptr;
@@ -246,11 +252,9 @@ namespace ptm {
             }
 
             block_header_t<T>* header = (block_header_t<T>*)addr;
-            header->total_bytes = size;
-
-            header->flags       = 0; 
-            header->next        = nullptr;
-            header->prev        = nullptr;
+            // since header will be used as a polymorphic object
+            // we must initialize it
+            new(header)block_header_t<T>(size, 0);
 
             header->flags[BLOCK_FLAGS_FREE].flip();
 
@@ -277,7 +281,7 @@ namespace ptm {
         uint8_t* real_ptr     = nullptr;
         uint8_t* aligned_ptr  = nullptr;
 
-        doubly_linked_list_header_t free_blocks;
+        doubly_linked_list_header_t<block_header_t<T>> free_blocks;
     };
 
     template<typename T>
@@ -362,34 +366,34 @@ namespace ptm {
 
     /* destroys and creates objects upon creating and destroying */
     template<typename T>
-    class object_pool_t : public memory_pool_t<T> {
+    class object_pool_t {
     public:
-        object_pool_t() {
-            this->initial_size = this->_initial_size;
-        }
+        object_pool_t() {}
 
-        object_pool_t(size_t initial_size) {
-            this->initial_size = initial_size;
-        }
+        object_pool_t(size_t initial_size)
+            : mem_pool(initial_size) {}
 
         template<typename ... params>
         T* create(size_t size, params&& ... args) {
-            T* elements = this->allocate(size);
+            T* elements = mem_pool.allocate(size);
         
-            for(size_t i = 0; i < size; i++) {
-                this->construct(elements + i, args...);
+            for(size_t i = 0; i < size && elements; i++) {
+                mem_pool.construct(&elements[i], args...);
             }
 
             return elements;
         }
 
-        void destruct(T* ptr, size_t size) {
+        void destroy(T* ptr, size_t size) {
             for(size_t i = 0; i < size; i++) {
-                this->destroy(ptr + i);
+                mem_pool.destroy(ptr + i);
             }
 
-            this->deallocate(ptr, size);
+            mem_pool.deallocate(ptr, size);
         }
+    
+    private:
+        memory_pool_t<T> mem_pool;
     };
 
     template<typename T>
