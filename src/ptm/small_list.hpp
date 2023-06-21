@@ -40,9 +40,7 @@ namespace ptm {
         void pop_back() {
             if(use_heap) {
                 heap_buffer().pop_back();
-            } else {
-                size_t last = count - 1;
-            }
+            } 
 
             count--;
         }

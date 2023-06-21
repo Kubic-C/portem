@@ -26,27 +26,59 @@ struct object_t {
 };
 
 int main() {
-    ptm::small_list_t<int> list;
+    constexpr size_t test_size = 10000;
 
-    list.push_back(1);
-    list.push_back(2);
-    list.push_back(3);
-    list.push_back(4);
-    list.push_back(5);
+    printf("using test size %llu\n\n\n", test_size);
 
-    for(uint32_t i = 0; i < 5; i++) {
-        printf("%i\n", list[i]);
+    printf("# testing free_list_t #\n");
+    ptm::free_list_t<int>  free_list;
+    std::vector<int> id_list;
+    std::vector<int> expected_values;
+
+    for(size_t i = 0; i < test_size; i++) {
+        id_list.push_back(free_list.insert(i));
+        expected_values.push_back(i);
     }
 
-    list.pop_back();
-    list.pop_back();
-    list.pop_back();
-    list.pop_back();
-    list.pop_back();
+    for(size_t i = 0; i < test_size; i++) {
+        if(free_list[id_list[i]] != expected_values[i]) {
+            printf("free_list_t test failed\n");
+            exit(EXIT_FAILURE);
+        }
+    }
 
+    for(size_t i = 0; i < test_size; i++) {
+        free_list.erase(id_list[i]);
+    }
+
+    id_list.clear();
+    expected_values.clear();
+
+    printf("success\n\n");
+
+    printf("# testing small_list_t #\n");
+    ptm::small_list_t<int, 128> small_list;
+
+    for(size_t i = 0; i < test_size; i++) {
+        small_list.push_back(i);
+        expected_values.push_back(i);
+    }
+
+    for(size_t i = 0; i < test_size; i++) {
+        if(small_list[i] != expected_values[i]) {
+            printf("small_list_t test failed\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    for(size_t i = 0; i < test_size; i++) {
+        small_list.pop_back();
+    }
+
+    printf("success\n\n");
+
+    printf("# testing memory pool and object pool #\n");
     for(uint32_t i = 0; i < 10; i++) {
-        printf("starting test: %u\n", i);
-        const uint32_t test_size = 100000;
         ptm::object_pool_t<object_t> int_pool(5 * i + 1);
         std::bitset<test_size> object_deleted = {};
 
@@ -84,9 +116,9 @@ int main() {
 
         for(auto ptr : test_values)
                 int_pool.destroy(ptr, 1);
-
-        printf("no failure: %u\n", i);
     }
+
+    printf("success\n\n");
 
     return 0;
 }

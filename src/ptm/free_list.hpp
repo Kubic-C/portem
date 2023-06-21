@@ -11,10 +11,10 @@ namespace ptm {
     // in the list without invalidating indices. T must be trivially constructible 
     // and destructible.
     template <class T>
-    class free_list {
+    class free_list_t {
     public:
         /// Creates a new free list.
-        free_list();
+        free_list_t();
 
         /// Inserts an element to the free list and returns an index to it.
         int insert(const T& element);
@@ -45,12 +45,12 @@ namespace ptm {
     };
 
     template <class T>
-    free_list<T>::free_list()
+    free_list_t<T>::free_list_t()
         : first_free(-1) {
     }
 
     template <class T>
-    int free_list<T>::insert(const T& element) {
+    int free_list_t<T>::insert(const T& element) {
         if (first_free != -1) {
             const int index = first_free;
             first_free = data[first_free].next;
@@ -66,29 +66,29 @@ namespace ptm {
     }
 
     template <class T>
-    void free_list<T>::erase(int n) {
+    void free_list_t<T>::erase(int n) {
         data[n].next = first_free;
         first_free = n;
     }
 
     template <class T>
-    void free_list<T>::clear() {
+    void free_list_t<T>::clear() {
         data.clear();
         first_free = -1;
     }
 
     template <class T>
-    int free_list<T>::range() const {
+    int free_list_t<T>::range() const {
         return static_cast<int>(data.size());
     }
 
     template <class T>
-    T& free_list<T>::operator[](int n) {
+    T& free_list_t<T>::operator[](int n) {
         return data[n].element;
     }
 
     template <class T>
-    const T& free_list<T>::operator[](int n) const {
+    const T& free_list_t<T>::operator[](int n) const {
         return data[n].element;
     }
 }
