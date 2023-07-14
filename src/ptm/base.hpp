@@ -18,10 +18,10 @@ namespace ptm {
 
     // if you see any of these values on a variable
     // when debugging, chances are the: the variable is not initialized
-    constexpr float blatent_f = std::numeric_limits<float>::max();
-    constexpr float blatent_i32 = std::numeric_limits<int32_t>::max();
-    constexpr float blatent_u32 = std::numeric_limits<uint32_t>::max();
-    constexpr float blatent_u8 = std::numeric_limits<uint8_t>::max();
+    constexpr float    blatent_f   = std::numeric_limits<float>::max();
+    constexpr int32_t  blatent_i32 = std::numeric_limits<int32_t>::max();
+    constexpr uint8_t  blatent_u8  = std::numeric_limits<uint8_t>::max();
+    constexpr uint32_t blatent_u32 = std::numeric_limits<uint32_t>::max();
 
     inline log_func_t log = [](const char* msg) {
         printf("%s\n", msg);

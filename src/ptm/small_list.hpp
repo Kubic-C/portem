@@ -13,9 +13,9 @@ namespace ptm {
     public:
         small_list_t() {} // variants by default, construct the first alternative
 
-        void push_back(const T& element) {
+        void emplace_back(const T& element) {
             if(use_heap) {
-                heap_buffer().push_back(element);
+                heap_buffer().emplace_back(element);
             } else if(count + 1 > max) {
                 // copy the contents of the stack buffer over 
                 // to a new heap buffer
@@ -28,21 +28,28 @@ namespace ptm {
                 // set the variant as a heap buffer
                 use_heap = true; 
                 buffer.template emplace<1>(new_buffer);
-                heap_buffer().push_back(element);
+                heap_buffer().emplace_back(element);
             } else {
-                stack_buffer()[count] = element;
+                stack_buffer()[count] = std::move(element);
             }
 
             // cant forget this
             count++;
         }
 
-        void pop_back() {
+        T pop_back() {
+            T last_element;
+         
             if(use_heap) {
+                last_element = heap_buffer().back();
                 heap_buffer().pop_back();
-            } 
+            } else {
+                last_element = stack_buffer()[count - 1];
+            }
 
             count--;
+
+            return last_element;
         }
 
         T& operator[](size_t i) {
@@ -52,6 +59,10 @@ namespace ptm {
                 return heap_buffer()[i];
             else 
                 return stack_buffer()[i];
+        }
+
+        size_t size() {
+            return count;
         }
 
     private:

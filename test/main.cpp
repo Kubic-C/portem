@@ -60,7 +60,7 @@ int main() {
     ptm::small_list_t<int, 128> small_list;
 
     for(size_t i = 0; i < test_size; i++) {
-        small_list.push_back(i);
+        small_list.emplace_back(i);
         expected_values.push_back(i);
     }
 

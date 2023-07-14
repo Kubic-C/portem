@@ -28,6 +28,10 @@ namespace ptm {
         // Returns the range of valid indices.
         int range() const;
 
+        // Reserve additional space within the vector to prevent
+        // additional malloc calls
+        void reserve(size_t size);
+
         // Returns the nth element.
         T& operator[](int n);
 
@@ -35,12 +39,12 @@ namespace ptm {
         const T& operator[](int n) const;
 
     private:
-        union free_element
-        {
+        union free_element_t {
             T element;
             int next;
         };
-        std::vector<free_element> data;
+
+        std::vector<free_element_t> data;
         int first_free;
     };
 
@@ -56,9 +60,8 @@ namespace ptm {
             first_free = data[first_free].next;
             data[index].element = element;
             return index;
-        }
-        else {
-            free_element fe;
+        } else {
+            free_element_t fe;
             fe.element = element;
             data.push_back(fe);
             return static_cast<int>(data.size() - 1);
@@ -80,6 +83,11 @@ namespace ptm {
     template <class T>
     int free_list_t<T>::range() const {
         return static_cast<int>(data.size());
+    }
+
+    template<class T>
+    void free_list_t<T>::reserve(size_t size) {
+        data.reserve(size);
     }
 
     template <class T>
