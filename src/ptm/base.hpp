@@ -10,6 +10,8 @@
 #include <limits>
 #include <memory>
 #include <cstring>
+#include <map>
+#include <typeindex>
 
 namespace ptm {
     constexpr auto system_alignment = sizeof(void*);

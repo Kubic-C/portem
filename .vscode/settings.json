@@ -64,6 +64,13 @@
         "streambuf": "cpp",
         "thread": "cpp",
         "cinttypes": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "xhash": "cpp",
+        "xmemory": "cpp",
+        "xstring": "cpp",
+        "typeindex": "cpp",
+        "xtree": "cpp",
+        "xtr1common": "cpp",
+        "xutility": "cpp"
     }
 }
