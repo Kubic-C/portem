@@ -5,3 +5,4 @@
 #include "free_list.hpp"
 #include "stack_allocator.hpp"
 #include "static_list.hpp"
+#include "runtime_dynamic_allocator.hpp"
