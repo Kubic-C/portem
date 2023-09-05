@@ -27,7 +27,7 @@ namespace ptm {
             const size_t total_size = sizeof(block_t);
             block_t*     block      = nullptr;
 
-            if(max_size <= count) {
+            if(max_size <= count + total_size) {
                 return nullptr;
             }
 

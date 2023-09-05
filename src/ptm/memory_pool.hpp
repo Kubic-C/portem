@@ -81,7 +81,7 @@ namespace ptm {
             real_ptr = nullptr;
 
             if(freed_blocks != total_blocks)
-                log("some blocks were not free'd");
+                log("some blocks were not free'd %s\n", typeid(T).name());
         }
 
         // size is the amount of elements you want allocated
@@ -348,7 +348,7 @@ namespace ptm {
                 }
             }
 
-            assert(!ptr);
+            assert(!"pointer was not in located in this pool");
         }
 
         size_t get_initial_size() const {
