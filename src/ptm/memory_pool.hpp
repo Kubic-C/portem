@@ -57,14 +57,10 @@ namespace ptm {
             bytesize_of_element = SIZE_MAX;
         }
 
+        _impl_sparse_memory_pool_t(_impl_sparse_memory_pool_t&& other);
+        _impl_sparse_memory_pool_t& operator=(_impl_sparse_memory_pool_t&& other);
+
         _impl_sparse_memory_pool_t(size_t bytesize_of_element, size_t initial_max_elements = 100) {
-            this->bytesize_of_element = bytesize_of_element;
-            pools.emplace_back(bytesize_of_element, initial_max_elements);
-        }
-
-        void init(size_t bytesize_of_element, size_t initial_max_elements = 100) {
-            assert(this->bytesize_of_element == SIZE_MAX && "Already initialized");
-
             this->bytesize_of_element = bytesize_of_element;
             pools.emplace_back(bytesize_of_element, initial_max_elements);
         }
@@ -104,7 +100,7 @@ namespace ptm {
     class memory_pool_t : public allocator_t<T> {
     public:
         memory_pool_t(size_t initial_max_elements = 100) {
-            pool.init(sizeof(T), initial_max_elements);
+            pool = _impl_sparse_memory_pool_t(sizeof(T), initial_max_elements);
         }
 
         T* allocate(size_t n, const void* hint = 0) override {

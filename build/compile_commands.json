@@ -1,31 +1,31 @@
 [
 {
   "directory": "C:/Users/sawye/Dev/portem/build",
-  "command": "C:\\msys64\\clang64\\bin\\clang++.exe -IC:/Users/sawye/Dev/portem/src -O3 -DNDEBUG -fsanitize=address -std=c++17 -o src\\ptm\\CMakeFiles\\portem.dir\\allocator.cpp.obj -c C:\\Users\\sawye\\Dev\\portem\\src\\ptm\\allocator.cpp",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -IC:/Users/sawye/Dev/portem/src -g -std=c++17 -o src\\ptm\\CMakeFiles\\portem.dir\\allocator.cpp.obj -c C:\\Users\\sawye\\Dev\\portem\\src\\ptm\\allocator.cpp",
   "file": "C:\\Users\\sawye\\Dev\\portem\\src\\ptm\\allocator.cpp",
   "output": "src\\ptm\\CMakeFiles\\portem.dir\\allocator.cpp.obj"
 },
 {
   "directory": "C:/Users/sawye/Dev/portem/build",
-  "command": "C:\\msys64\\clang64\\bin\\clang++.exe -IC:/Users/sawye/Dev/portem/src -O3 -DNDEBUG -fsanitize=address -std=c++17 -o src\\ptm\\CMakeFiles\\portem.dir\\memory_pool.cpp.obj -c C:\\Users\\sawye\\Dev\\portem\\src\\ptm\\memory_pool.cpp",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -IC:/Users/sawye/Dev/portem/src -g -std=c++17 -o src\\ptm\\CMakeFiles\\portem.dir\\memory_pool.cpp.obj -c C:\\Users\\sawye\\Dev\\portem\\src\\ptm\\memory_pool.cpp",
   "file": "C:\\Users\\sawye\\Dev\\portem\\src\\ptm\\memory_pool.cpp",
   "output": "src\\ptm\\CMakeFiles\\portem.dir\\memory_pool.cpp.obj"
 },
 {
   "directory": "C:/Users/sawye/Dev/portem/build",
-  "command": "C:\\msys64\\clang64\\bin\\clang++.exe -IC:/Users/sawye/Dev/portem/src -O3 -DNDEBUG -fsanitize=address -std=c++17 -o src\\ptm\\CMakeFiles\\portem.dir\\stack_allocator.cpp.obj -c C:\\Users\\sawye\\Dev\\portem\\src\\ptm\\stack_allocator.cpp",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -IC:/Users/sawye/Dev/portem/src -g -std=c++17 -o src\\ptm\\CMakeFiles\\portem.dir\\stack_allocator.cpp.obj -c C:\\Users\\sawye\\Dev\\portem\\src\\ptm\\stack_allocator.cpp",
   "file": "C:\\Users\\sawye\\Dev\\portem\\src\\ptm\\stack_allocator.cpp",
   "output": "src\\ptm\\CMakeFiles\\portem.dir\\stack_allocator.cpp.obj"
 },
 {
   "directory": "C:/Users/sawye/Dev/portem/build",
-  "command": "C:\\msys64\\clang64\\bin\\clang++.exe -IC:/Users/sawye/Dev/portem/src -O3 -DNDEBUG -fsanitize=address -std=c++17 -o src\\ptm\\CMakeFiles\\portem.dir\\runtime_dynamic_allocator.cpp.obj -c C:\\Users\\sawye\\Dev\\portem\\src\\ptm\\runtime_dynamic_allocator.cpp",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -IC:/Users/sawye/Dev/portem/src -g -std=c++17 -o src\\ptm\\CMakeFiles\\portem.dir\\runtime_dynamic_allocator.cpp.obj -c C:\\Users\\sawye\\Dev\\portem\\src\\ptm\\runtime_dynamic_allocator.cpp",
   "file": "C:\\Users\\sawye\\Dev\\portem\\src\\ptm\\runtime_dynamic_allocator.cpp",
   "output": "src\\ptm\\CMakeFiles\\portem.dir\\runtime_dynamic_allocator.cpp.obj"
 },
 {
   "directory": "C:/Users/sawye/Dev/portem/build",
-  "command": "C:\\msys64\\clang64\\bin\\clang++.exe -IC:/Users/sawye/Dev/portem/src -O3 -DNDEBUG -fsanitize=address -std=c++17 -o test\\CMakeFiles\\test_field.dir\\main.cpp.obj -c C:\\Users\\sawye\\Dev\\portem\\test\\main.cpp",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -IC:/Users/sawye/Dev/portem/src -g -std=c++17 -o test\\CMakeFiles\\test_field.dir\\main.cpp.obj -c C:\\Users\\sawye\\Dev\\portem\\test\\main.cpp",
   "file": "C:\\Users\\sawye\\Dev\\portem\\test\\main.cpp",
   "output": "test\\CMakeFiles\\test_field.dir\\main.cpp.obj"
 }
