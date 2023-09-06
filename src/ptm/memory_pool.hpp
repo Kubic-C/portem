@@ -35,8 +35,10 @@ namespace ptm {
     private:
         static constexpr size_t bits_per_byte = 8;
 
-        // should not use 
+        // should not use  
         bool _attempt_realloc(size_t new_max_elements);
+        
+        size_t try_allocate_in_range(size_t begin, size_t end, size_t n);
         uint8_t* _flags() { return (uint8_t*)memory; }
         uint8_t* _elements() { return inc_by_byte((uint8_t*)memory, flags_bytesize); }
 
@@ -44,6 +46,10 @@ namespace ptm {
         bool flip_bit(size_t index) { return _flags()[index / bits_per_byte] ^= (1 << (index % bits_per_byte)); }        
 
     private:
+        struct {
+            size_t last_free;
+        } cache;
+
         size_t bytesize_of_element = 0;
         size_t max_elements   = 0;
         size_t flags_bytesize = 0;
@@ -81,7 +87,6 @@ namespace ptm {
             }
 
             size_t prev_max_elements = pools.back().get_max_elements();
-            pools.reserve(1);
             pools.emplace_back(bytesize_of_element, prev_max_elements * 2);
             elements = pools.back().allocate(n);
 
@@ -115,63 +120,8 @@ namespace ptm {
             pool.deallocate((T*)ptr, n);
         }
 
-        memory_pool_t(const memory_pool_t<T>& other) {
-            this->initial_size = other.initial_size;
-            this->allocators = other.allocators;
-        }
-
-        memory_pool_t<T>* operator=(const memory_pool_t<T>& other) {
-            this->initial_size = other.initial_size;
-            this->allocators = other.allocators;    
-
-            return this;
-        }
-
-        ~memory_pool_t() {
-            for(auto& allocator : allocators) {
-                allocator.free();
-            }
-        }
-
-        T* allocate(size_t size, const void* hint = 0) override {
-            T* ptr = nullptr;
-
-            for(size_t i = allocators.size() - 1; i != SIZE_MAX; i--) {
-                ptr = allocators[i].allocate(size);
-                if(ptr != nullptr) {
-                    return ptr;
-                }
-            }
-
-            initial_size += size;
-            allocators.emplace_back();
-            allocators.back().init(initial_size);
-
-            return allocators.back().allocate(size);
-        }   
-
-        void deallocate(T* ptr, size_t n = 0) override {
-            for(auto& allocator : allocators) {
-                if(allocator.ptr_in_bounds(ptr)) {
-                    allocator.deallocate(ptr);
-                    return;
-                }
-            }
-
-            assert(!ptr);
-        }
-
-        size_t get_initial_size() const {
-            return initial_size;
-        }
-
-        const std::vector<block_allocator_t<T>>& get_allocators() const {
-            return allocators;
-        }
-
-    protected:
-        size_t initial_size;
-        std::vector<block_allocator_t<T>> allocators;
+    private:    
+        _impl_sparse_memory_pool_t pool;
     };
 
     template<typename T>

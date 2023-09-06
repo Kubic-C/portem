@@ -8,6 +8,8 @@ namespace ptm {
     bool _impl_continuous_memory_pool_t::reset(size_t bytesize_of_element, size_t max_elements) {
         const size_t alignment = 16;
         
+        cache.last_free = 0;
+
         this->bytesize_of_element = bytesize_of_element, 
         this->max_elements = max_elements; 
         
@@ -62,6 +64,7 @@ namespace ptm {
     }
 
     _impl_continuous_memory_pool_t::_impl_continuous_memory_pool_t(_impl_continuous_memory_pool_t&& other) {
+        cache = other.cache;
         bytesize_of_element = other.bytesize_of_element;
         max_elements        = other.max_elements;
         flags_bytesize      = other.flags_bytesize;
@@ -71,13 +74,11 @@ namespace ptm {
         other.memory = nullptr; 
     }
 
-    void* _impl_continuous_memory_pool_t::allocate(size_t n) {
-        // 1) iterate through all flags bits and find a continous set of bits that zero.
-        //    the size of that set being equal to n
+    size_t _impl_continuous_memory_pool_t::try_allocate_in_range(size_t begin, size_t end, size_t n) {
         size_t elements_index = SIZE_MAX;
-
-        size_t i = 0;
-        for(; i < max_elements;) {
+        
+        size_t i = begin;
+        for(; i < end;) {
             size_t bit = i;
 
             for(; bit < max_elements; bit++) {
@@ -90,7 +91,7 @@ namespace ptm {
                     }
 
                     if((bit - elements_index) + 1 >= n) {
-                        goto finished;
+                        goto success;
                     }
                 }
             }
@@ -98,9 +99,24 @@ namespace ptm {
             i = bit + 1;
         }
 
-        return (void*)nullptr;
+        return SIZE_MAX;
+    success:
+        return elements_index;
+    }
 
-finished:
+    void* _impl_continuous_memory_pool_t::allocate(size_t n) {
+        size_t elements_index = try_allocate_in_range(cache.last_free, max_elements, n);
+
+        if(elements_index == SIZE_MAX) {
+            elements_index = try_allocate_in_range(0, cache.last_free, n);
+
+            if(elements_index == SIZE_MAX) {
+                return (void*)nullptr;
+            }
+        } 
+
+        cache.last_free = 0;
+
         for(size_t i = elements_index; i < elements_index + n; i++) {
             flip_bit(i);
         }
@@ -110,6 +126,8 @@ finished:
 
     void  _impl_continuous_memory_pool_t::deallocate(void* elements, size_t n) {
         size_t elements_index = ((uint8_t*)elements - _elements()) / bytesize_of_element;
+
+        cache.last_free = elements_index;
 
         for(size_t i = elements_index; i < elements_index + n; i++) {
             assert(!is_free(i));

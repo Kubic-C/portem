@@ -32,6 +32,26 @@ namespace ptm {
             _get_pool<T>()->deallocate((void*)elements, n);
         }
 
+        template<typename T, typename ... params>
+        T* create(size_t n, params&& ... args) {
+            T* elements = allocate<T>(n);
+
+            for(size_t i = 0; i < n; i++) {
+                new(&elements[i])T(args...);
+            }
+
+            return elements;
+        }
+
+        template<typename T>
+        void destroy(T* elements, size_t n) {
+            for(size_t i = 0; i < n; i++) {
+                elements[i].~T();
+            }
+
+            deallocate<T>(elements, n);
+        }
+
     private:
         template<typename T>
         _impl_sparse_memory_pool_t* _get_pool() {
