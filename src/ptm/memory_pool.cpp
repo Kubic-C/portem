@@ -135,4 +135,19 @@ namespace ptm {
             flip_bit(i);
         }
     }
+
+    _impl_sparse_memory_pool_t::_impl_sparse_memory_pool_t(_impl_sparse_memory_pool_t&& other) {
+        bytesize_of_element = other.bytesize_of_element;
+        pools = std::move(other.pools);
+    }
+
+    _impl_sparse_memory_pool_t& _impl_sparse_memory_pool_t::operator=(_impl_sparse_memory_pool_t&& other) {
+        if(this == &other)
+            return *this;
+        
+        bytesize_of_element = other.bytesize_of_element;
+        pools = std::move(other.pools);
+        
+        return *this;
+    }
 }

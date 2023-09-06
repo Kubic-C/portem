@@ -14,7 +14,7 @@ namespace ptm {
             if(_pool_exists<T>())
                 return true;
 
-            pools[std::type_index(typeid(T))].init(sizeof(T), initial_max_elements);
+            pools[std::type_index(typeid(T))] = _impl_sparse_memory_pool_t(sizeof(T), initial_max_elements);
 
             return true;
         }
