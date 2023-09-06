@@ -111,8 +111,63 @@ namespace ptm {
             pool.deallocate((T*)ptr, n);
         }
 
-    private:    
-        _impl_sparse_memory_pool_t pool;
+        memory_pool_t(const memory_pool_t<T>& other) {
+            this->initial_size = other.initial_size;
+            this->allocators = other.allocators;
+        }
+
+        memory_pool_t<T>* operator=(const memory_pool_t<T>& other) {
+            this->initial_size = other.initial_size;
+            this->allocators = other.allocators;    
+
+            return this;
+        }
+
+        ~memory_pool_t() {
+            for(auto& allocator : allocators) {
+                allocator.free();
+            }
+        }
+
+        T* allocate(size_t size, const void* hint = 0) override {
+            T* ptr = nullptr;
+
+            for(size_t i = allocators.size() - 1; i != SIZE_MAX; i--) {
+                ptr = allocators[i].allocate(size);
+                if(ptr != nullptr) {
+                    return ptr;
+                }
+            }
+
+            initial_size += size;
+            allocators.emplace_back();
+            allocators.back().init(initial_size);
+
+            return allocators.back().allocate(size);
+        }   
+
+        void deallocate(T* ptr, size_t n = 0) override {
+            for(auto& allocator : allocators) {
+                if(allocator.ptr_in_bounds(ptr)) {
+                    allocator.deallocate(ptr);
+                    return;
+                }
+            }
+
+            assert(!ptr);
+        }
+
+        size_t get_initial_size() const {
+            return initial_size;
+        }
+
+        const std::vector<block_allocator_t<T>>& get_allocators() const {
+            return allocators;
+        }
+
+    protected:
+        size_t initial_size;
+        std::vector<block_allocator_t<T>> allocators;
     };
 
     template<typename T>

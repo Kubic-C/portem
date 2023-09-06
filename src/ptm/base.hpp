@@ -10,13 +10,14 @@
 #include <limits>
 #include <memory>
 #include <cstring>
+#include <cstdarg>
 #include <map>
 #include <typeindex>
 
 namespace ptm {
     constexpr auto system_alignment = sizeof(void*);
 
-    typedef std::function<void(const char*)> log_func_t;
+    typedef void(*log_func_t)(const char*, ...);
 
     // if you see any of these values on a variable
     // when debugging, chances are the: the variable is not initialized
@@ -24,10 +25,17 @@ namespace ptm {
     constexpr int32_t  blatent_i32 = std::numeric_limits<int32_t>::max();
     constexpr uint8_t  blatent_u8  = std::numeric_limits<uint8_t>::max();
     constexpr uint32_t blatent_u32 = std::numeric_limits<uint32_t>::max();
+    constexpr size_t   blatent_size = std::numeric_limits<size_t>::max();
+    
+    inline void default_log(const char* fmt, ...) {
+        va_list args;
 
-    inline log_func_t log = [](const char* msg) {
-        printf("%s\n", msg);
+        va_start(args, fmt);
+        vfprintf(stdout, fmt, args);
+        va_end(args);
     };
+
+    inline log_func_t log = default_log;
 
     template<typename T>
     void zero(T* dst) {

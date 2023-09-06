@@ -2,7 +2,7 @@
 
 #include "base.hpp"
 
-namespace kin {
+namespace syn {
     template<typename T, size_t capacity>
     class static_list {
     public:

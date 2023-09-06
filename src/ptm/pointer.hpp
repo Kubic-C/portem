@@ -53,8 +53,25 @@ namespace ptm {
             return static_cast<U*>(object);    
         }
 
-        bool operator==(const ptr_t<T>& other) {
+        bool operator==(const ptr_t<T>& other) const {
             return (uint8_t*)object == (uint8_t*)other.get();
+        }
+
+        bool operator==(const T* other) const {
+            return (uint8_t*)object == (uint8_t*)other;
+        }
+
+        bool operator!=(const ptr_t<T>& other) const {
+            return (uint8_t*)object != (uint8_t*)other.get();
+        }
+
+        bool operator!=(const T* other) const {
+            return (uint8_t*)object != (uint8_t*)other;
+        }
+
+        template<typename int_t>
+        T& operator[](int_t index) {
+            return object[index];
         }
 
     private:
